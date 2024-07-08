@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Person {
+model Sender {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   nickname  String?
@@ -21,12 +21,12 @@ model Person {
   updatedAt DateTime? @updatedAt
 
   // relationships
-  things Thing[]
+  lists MailingList[]
 
-  @@map("person")
+  @@map("sender")
 }
 
-model Thing {
+model MailingList {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   genre     String?
@@ -34,11 +34,83 @@ model Thing {
   updatedAt DateTime? @updatedAt
   rating    Int       @default(0)
 
-  // relational ids
-  personId Int
+  // many-to-one relation: MailingList-to-Sender
+  senderId Int
+  sender   Sender @relation(fields: [senderId], references: [id])
 
-  // relationships
-  person Person @relation(fields: [personId], references: [id])
+  // many-to-many relations
+  recipients    RecipientsOnMailingLists[]
 
-  @@map("thing")
+  @@map("list")
 }
+
+model Recipient {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  email     String
+
+
+  // one-to-many relations
+  messages  Message[]
+
+  // many-to-many relation: Recipient x MailingList
+  lists     RecipientsOnMailingLists[]
+
+
+}
+
+model RecipientsOnMailingLists {
+  recipient     Recipient     @relation(fields: [recipientId], references: [id])
+  recipientId   Int // relation scalar field (used in the `@relation` attribute above)
+  mailingList   MailingList   @relation(fields: [mailingListId], references: [id])
+  mailingListId Int // relation scalar field (used in the `@relation` attribute above)
+
+  // some standard, best-practice values
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  // make these entries identifiable
+  @@id([recipientId, mailingListId])
+}
+
+
+
+
+model Message {
+  id          Int       @id @default(autoincrement())
+  content     String
+  delivered   Boolean
+  sentDate    DateTime
+
+  // many-to-one relation: Message-to-Recipient
+  recipientId Int
+  recipient   Recipient @relation(fields: [recipientId], references: [id])
+}
+
+
+
+// model Post {
+//   id         Int                 @id @default(autoincrement())
+//   title      String
+//   categories CategoriesOnPosts[]
+// }
+
+// model Category {
+//   id    Int                 @id @default(autoincrement())
+//   name  String
+//   posts CategoriesOnPosts[]
+// }
+
+// model CategoriesOnPosts {
+//   post       Post     @relation(fields: [postId], references: [id])
+//   postId     Int // relation scalar field (used in the `@relation` attribute above)
+//   category   Category @relation(fields: [categoryId], references: [id])
+//   categoryId Int // relation scalar field (used in the `@relation` attribute above)
+//   assignedAt DateTime @default(now())
+//   assignedBy String
+
+//   @@id([postId, categoryId])
+// }
+
+
+
