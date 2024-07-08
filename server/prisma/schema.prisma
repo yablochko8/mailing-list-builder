@@ -32,7 +32,7 @@ model Sender {
 
 model Recipient {
   id            Int       @id @default(autoincrement())
-  name          String    @unique
+  name          String
   email         String
 
   // one-to-many relations
@@ -58,7 +58,7 @@ model List {
 
   // many-to-one relation: List-to-Sender
   senderId      Int
-  sender        Sender @relation(fields: [senderId], references: [id])
+  sender        Sender    @relation(fields: [senderId], references: [id])
 
   // many-to-many relations
   recipients    RecipientsOnLists[]
@@ -74,14 +74,19 @@ model List {
 }
 
 
-
+enum BlastStatus {
+  draft
+  ongoing
+  completed
+  failed
+}
 model Blast {
   id            Int       @id @default(autoincrement())
   name          String
-  status        String
+  status        BlastStatus @default(draft)
 
   // one-to-many relations
-  messagesSent  Message[]
+  messages      Message[]
 
   // many-to-one relation: Blast-to-Sender
   senderId      Int
@@ -102,15 +107,14 @@ model Blast {
 enum MessageStatus {
   draft
   queued
-  sent
-  failed
+  sentWithSuccess
+  sentButFailed
 }
 model Message {
   id            Int       @id @default(autoincrement())
   content       String
-  delivered     Boolean   @default(false)
-  sentAt        DateTime?
   status        MessageStatus @default(draft)
+  sentAt        DateTime?
 
   // many-to-one relation: Message-to-Blast
   blastId       Int
@@ -144,7 +148,6 @@ model RecipientsOnLists {
   // make these entries identifiable
   @@id([recipientId, listId])
 }
-
 
 
 model ListsInBlast {

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { dbClient } from "./dbClient";
 
 export const PORT = 4101;
 
@@ -12,25 +13,30 @@ app.use(cors());
  *
  * Creating new things
  *
- * POST /sender/new
- * GET  /sender/all
+ * POST /sender/new     ->  clerkId, name, email
+ * PUT  /sender/:id     +   List[], Blast[]
  * GET  /sender/:id
+ * GET  /sender/all
  *
- * POST /recipient/new
- * POST /recipient/all  ? do we need all these /all endpoints for basic flow ?
+ * POST /recipient/new  ->  name, email
+ * PUT  /recipient/:id  +   Message[], Lists[]
  * GET  /recipient/:id
+ * POST /recipient/all
  *
- * POST /list/new       -> inputs: sender, recipient[]
- * GET  /list/all
+ * POST /list/new       ->  Sender, name
+ * PUT  /list/:id       +   Recipient[], Blast[]
  * GET  /list/:id
+ * GET  /list/all
  *
- * POST /blast/new      -> inputs: sender, list[]
- * GET  /blast/all
+ * POST /blast/new      ->  Sender, name
+ * PUT  /blast/:id      +   List[], Message[], status
  * GET  /blast/:id
+ * GET  /blast/all
  *
- * POST /message/new    -> inputs: blast, recipient
- * GET  /message/all
+ * POST /message/new    ->  Blast, Recipient
+ * PUT  /message/:id    +   content, status, sentAt,
  * GET  /message/:id
+ * GET  /message/all
  *
  * Add later...
  *
@@ -39,18 +45,6 @@ app.use(cors());
  * DELETE /list/:id
  * DELETE /blast/:id
  * DELETE /message/:id
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  *
  *
  */
