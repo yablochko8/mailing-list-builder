@@ -112,9 +112,11 @@ enum MessageStatus {
 }
 model Message {
   id            Int       @id @default(autoincrement())
-  content       String
+  subjectText   String
+  bodyText      String
   status        MessageStatus @default(draft)
   sentAt        DateTime?
+  mailClient    String?
 
   // many-to-one relation: Message-to-Blast
   blastId       Int

@@ -1,4 +1,4 @@
-type Message = {
+export type ParsedMessage = {
   to: string;
   from: string;
   subject: string;
@@ -7,12 +7,12 @@ type Message = {
 };
 
 export type EmailClient = {
-  send: (msg: Message) => Promise<void>;
+  send: (msg: ParsedMessage) => Promise<void>;
 };
 
 const EmailGateway = (client: EmailClient) => {
   return {
-    send: (msg: Message) => {
+    send: (msg: ParsedMessage) => {
       return client.send(msg);
     },
   };

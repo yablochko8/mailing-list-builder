@@ -34,7 +34,7 @@ app.use(cors());
  * GET  /blast/all
  *
  * POST /message/new    ->  Blast, Recipient
- * PUT  /message/:id    +   content, status, sentAt,
+ * PUT  /message/:id    +   content, status, sentAt, mailClient
  * GET  /message/:id
  * GET  /message/all
  *
