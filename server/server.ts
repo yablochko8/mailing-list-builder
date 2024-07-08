@@ -23,13 +23,22 @@ app.use(cors());
  * POST /list/new       -> inputs: sender, recipient[]
  * GET  /list/all
  * GET  /list/:id
- * DELETE /list/:id
  *
  * POST /blast/new      -> inputs: sender, list[]
  * GET  /blast/all
  * GET  /blast/:id
  *
+ * POST /message/new    -> inputs: blast, recipient
+ * GET  /message/all
+ * GET  /message/:id
  *
+ * Add later...
+ *
+ * DELETE /sender/:id
+ * DELETE /recipient/:id
+ * DELETE /list/:id
+ * DELETE /blast/:id
+ * DELETE /message/:id
  *
  *
  *
