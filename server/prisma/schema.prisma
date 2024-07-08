@@ -23,7 +23,6 @@ model Sender {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
@@ -45,7 +44,6 @@ model Recipient {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
@@ -69,7 +67,6 @@ model List {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
@@ -96,19 +93,24 @@ model Blast {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
   @@map("blast")
 }
 
+enum MessageStatus {
+  draft
+  queued
+  sent
+  failed
+}
 model Message {
   id            Int       @id @default(autoincrement())
   content       String
-  delivered     Boolean
-  sentDate      DateTime
-  status        String // Should probably be an enum
+  delivered     Boolean   @default(false)
+  sentAt        DateTime?
+  status        MessageStatus @default(draft)
 
   // many-to-one relation: Message-to-Blast
   blastId       Int
@@ -121,7 +123,6 @@ model Message {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
@@ -137,7 +138,6 @@ model RecipientsOnLists {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
@@ -156,7 +156,6 @@ model ListsInBlast {
   // standard
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   version       Int       @default(1)
 
