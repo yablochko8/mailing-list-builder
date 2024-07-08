@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,13 +12,17 @@ datasource db {
 
 model Sender {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
-  nickname  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  clerkId   String    @unique
+  name      String    
+  email     String    @unique
 
-  // relationships
-  lists MailingList[]
+  // one-to-many relations
+  lists     MailingList[]
+  blasts    Blast[]
+
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("sender")
 }
@@ -29,10 +30,6 @@ model Sender {
 model MailingList {
   id        Int       @id @default(autoincrement())
   name      String    @unique
-  genre     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  rating    Int       @default(0)
 
   // many-to-one relation: MailingList-to-Sender
   senderId Int
@@ -40,6 +37,11 @@ model MailingList {
 
   // many-to-many relations
   recipients    RecipientsOnMailingLists[]
+  blasts        BlastsToMailingLists[]
+
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("list")
 }
@@ -49,28 +51,17 @@ model Recipient {
   name      String    @unique
   email     String
 
-
   // one-to-many relations
   messages  Message[]
 
-  // many-to-many relation: Recipient x MailingList
+  // many-to-many relations
   lists     RecipientsOnMailingLists[]
 
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-}
-
-model RecipientsOnMailingLists {
-  recipient     Recipient     @relation(fields: [recipientId], references: [id])
-  recipientId   Int // relation scalar field (used in the `@relation` attribute above)
-  mailingList   MailingList   @relation(fields: [mailingListId], references: [id])
-  mailingListId Int // relation scalar field (used in the `@relation` attribute above)
-
-  // some standard, best-practice values
-  assignedAt DateTime @default(now())
-  assignedBy String
-
-  // make these entries identifiable
-  @@id([recipientId, mailingListId])
+  @@map("recipient")
 }
 
 
@@ -81,36 +72,74 @@ model Message {
   content     String
   delivered   Boolean
   sentDate    DateTime
+  status      String // Should probably be an enum
+
+  // many-to-one relation: Message-to-Blast
+  blastId     Int
+  blast       Blast     @relation(fields: [blastId], references: [id])
 
   // many-to-one relation: Message-to-Recipient
   recipientId Int
   recipient   Recipient @relation(fields: [recipientId], references: [id])
+
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("message")
+}
+
+model Blast {
+  id            Int       @id @default(autoincrement())
+  name          String
+  status        String
+
+  // one-to-many relations
+  messagesSent  Message[]
+
+  // many-to-one relation: Blast-to-Sender
+  senderId      Int
+  sender        Sender    @relation(fields: [senderId], references: [id])
+
+  // many-to-many relations
+  targetLists   BlastsToMailingLists[]
+
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("blast")
+}
+model RecipientsOnMailingLists {
+  recipient     Recipient     @relation(fields: [recipientId], references: [id])
+  recipientId   Int // relation scalar field (used in the `@relation` attribute above)
+  mailingList   MailingList   @relation(fields: [mailingListId], references: [id])
+  mailingListId Int // relation scalar field (used in the `@relation` attribute above)
+
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // make these entries identifiable
+  @@id([recipientId, mailingListId])
 }
 
 
 
-// model Post {
-//   id         Int                 @id @default(autoincrement())
-//   title      String
-//   categories CategoriesOnPosts[]
-// }
+model BlastsToMailingLists {
+  blast             Blast     @relation(fields: [blastId], references: [id])
+  blastId           Int // relation scalar field (used in the `@relation` attribute above)
+  mailingList       MailingList   @relation(fields: [mailingListId], references: [id])
+  mailingListId     Int // relation scalar field (used in the `@relation` attribute above)
 
-// model Category {
-//   id    Int                 @id @default(autoincrement())
-//   name  String
-//   posts CategoriesOnPosts[]
-// }
+  // standard
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-// model CategoriesOnPosts {
-//   post       Post     @relation(fields: [postId], references: [id])
-//   postId     Int // relation scalar field (used in the `@relation` attribute above)
-//   category   Category @relation(fields: [categoryId], references: [id])
-//   categoryId Int // relation scalar field (used in the `@relation` attribute above)
-//   assignedAt DateTime @default(now())
-//   assignedBy String
+  // make these entries identifiable
+  @@id([blastId, mailingListId])
+}
 
-//   @@id([postId, categoryId])
-// }
 
 
 
