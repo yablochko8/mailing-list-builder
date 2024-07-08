@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { dbClient } from "./dbClient";
+import { dbClient } from "./utils/dbClient";
 
 export const PORT = 4101;
 
