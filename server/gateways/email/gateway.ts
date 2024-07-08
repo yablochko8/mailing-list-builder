@@ -7,6 +7,7 @@ export type ParsedMessage = {
 };
 
 export type EmailClient = {
+  name: string;
   send: (msg: ParsedMessage) => Promise<void>;
 };
 
