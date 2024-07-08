@@ -11,83 +11,72 @@ datasource db {
 }
 
 model Sender {
-  id        Int       @id @default(autoincrement())
-  clerkId   String    @unique
-  name      String    
-  email     String    @unique
+  id            Int       @id @default(autoincrement())
+  clerkId       String    @unique
+  name          String    
+  email         String    @unique
 
   // one-to-many relations
-  lists     MailingList[]
-  blasts    Blast[]
+  lists         List[]
+  blasts        Blast[]
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
   @@map("sender")
 }
 
-model MailingList {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-
-  // many-to-one relation: MailingList-to-Sender
-  senderId Int
-  sender   Sender @relation(fields: [senderId], references: [id])
-
-  // many-to-many relations
-  recipients    RecipientsOnMailingLists[]
-  blasts        BlastsToMailingLists[]
-
-  // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  @@map("list")
-}
 
 model Recipient {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  email     String
+  id            Int       @id @default(autoincrement())
+  name          String    @unique
+  email         String
 
   // one-to-many relations
-  messages  Message[]
+  messages      Message[]
 
   // many-to-many relations
-  lists     RecipientsOnMailingLists[]
+  lists         RecipientsOnLists[]
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
   @@map("recipient")
 }
 
 
 
+model List {
+  id            Int       @id @default(autoincrement())
+  name          String    @unique
 
-model Message {
-  id          Int       @id @default(autoincrement())
-  content     String
-  delivered   Boolean
-  sentDate    DateTime
-  status      String // Should probably be an enum
+  // many-to-one relation: List-to-Sender
+  senderId      Int
+  sender        Sender @relation(fields: [senderId], references: [id])
 
-  // many-to-one relation: Message-to-Blast
-  blastId     Int
-  blast       Blast     @relation(fields: [blastId], references: [id])
-
-  // many-to-one relation: Message-to-Recipient
-  recipientId Int
-  recipient   Recipient @relation(fields: [recipientId], references: [id])
+  // many-to-many relations
+  recipients    RecipientsOnLists[]
+  blasts        ListsInBlast[]
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
-  @@map("message")
+  @@map("list")
 }
+
+
 
 model Blast {
   id            Int       @id @default(autoincrement())
@@ -102,42 +91,78 @@ model Blast {
   sender        Sender    @relation(fields: [senderId], references: [id])
 
   // many-to-many relations
-  targetLists   BlastsToMailingLists[]
+  targetLists   ListsInBlast[]
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
   @@map("blast")
 }
-model RecipientsOnMailingLists {
-  recipient     Recipient     @relation(fields: [recipientId], references: [id])
-  recipientId   Int // relation scalar field (used in the `@relation` attribute above)
-  mailingList   MailingList   @relation(fields: [mailingListId], references: [id])
-  mailingListId Int // relation scalar field (used in the `@relation` attribute above)
+
+model Message {
+  id            Int       @id @default(autoincrement())
+  content       String
+  delivered     Boolean
+  sentDate      DateTime
+  status        String // Should probably be an enum
+
+  // many-to-one relation: Message-to-Blast
+  blastId       Int
+  blast         Blast     @relation(fields: [blastId], references: [id])
+
+  // many-to-one relation: Message-to-Recipient
+  recipientId   Int
+  recipient     Recipient @relation(fields: [recipientId], references: [id])
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
+
+  @@map("message")
+}
+
+model RecipientsOnLists {
+  recipient     Recipient     @relation(fields: [recipientId], references: [id])
+  recipientId   Int // relation scalar field (used in the `@relation` attribute above)
+  list          List   @relation(fields: [listId], references: [id])
+  listId        Int // relation scalar field (used in the `@relation` attribute above)
+
+  // standard
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
   // make these entries identifiable
-  @@id([recipientId, mailingListId])
+  @@id([recipientId, listId])
 }
 
 
 
-model BlastsToMailingLists {
-  blast             Blast     @relation(fields: [blastId], references: [id])
-  blastId           Int // relation scalar field (used in the `@relation` attribute above)
-  mailingList       MailingList   @relation(fields: [mailingListId], references: [id])
-  mailingListId     Int // relation scalar field (used in the `@relation` attribute above)
+model ListsInBlast {
+  blast         Blast     @relation(fields: [blastId], references: [id])
+  blastId       Int // relation scalar field (used in the `@relation` attribute above)
+  list          List   @relation(fields: [listId], references: [id])
+  listId        Int // relation scalar field (used in the `@relation` attribute above)
 
   // standard
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  version       Int       @default(1)
 
   // make these entries identifiable
-  @@id([blastId, mailingListId])
+  @@id([blastId, listId])
+	@@map("BlastsToLists")
 }
 
 
