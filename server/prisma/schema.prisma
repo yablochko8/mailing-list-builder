@@ -17,6 +17,7 @@ model Sender {
   email         String    @unique
 
   // one-to-many relations
+  recipients    Recipient[]
   lists         List[]
   blasts        Blast[]
 
@@ -40,6 +41,10 @@ model Recipient {
 
   // many-to-many relations
   lists         RecipientsOnLists[]
+
+  // many-to-one relation
+  senderId      Int
+  sender        Sender    @relation(fields: [senderId], references: [id])
 
   // standard
   createdAt     DateTime  @default(now())

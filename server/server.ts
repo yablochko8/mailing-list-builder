@@ -18,7 +18,7 @@ app.use(cors());
  * GET  /sender/:id
  * GET  /sender/all
  *
- * POST /recipient/new  ->  name, email
+ * POST /recipient/new  ->  Sender, name, email
  * PUT  /recipient/:id  +   Message[], Lists[]
  * GET  /recipient/:id
  * POST /recipient/all
@@ -48,6 +48,23 @@ app.use(cors());
  *
  *
  */
+
+/**
+ * New sender, requires clerkId, name, email
+ */
+app.post("/sender/new", async (req, res) => {
+  console.log("POST endpoint called.");
+  const newMessage = req.body.message;
+  storedValues.push(newMessage);
+  res.json({ messages: storedValues });
+});
+
+app.post("/sender/new", async (req, res) => {
+  console.log("POST endpoint called.");
+  const newMessage = req.body.message;
+  storedValues.push(newMessage);
+  res.json({ messages: storedValues });
+});
 
 app.get("/", async (req, res) => {
   console.log("GET endpoint called.");
