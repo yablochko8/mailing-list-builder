@@ -35,6 +35,42 @@ const postDataAndDisplayResponse = async (
   return json.messages; // unused here
 };
 
+const getAllSender = async () => {
+  const response = await fetch(`${serverPath}/api/sender/all`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  console.log("The server response was:", json);
+  return json.message; // unused here
+};
+
+const getOneSender = async () => {
+  const response = await fetch(`${serverPath}/api/sender/1`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  console.log("The server response was:", json);
+  return json.message; // unused here
+};
+
+const testSearch = async () => {
+  const response = await fetch(`${serverPath}/api/sender/search/jim`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  console.log("The server response was:", json);
+  return json.message; // unused here
+};
+
 function App() {
   const [submittedValue, setSubmittedValue] = useState("");
   const [valuesFromServer, setValuesFromServer] = useState(["starting data"]);
@@ -42,7 +78,7 @@ function App() {
   return (
     <>
       <div>Open the browser console to see this working.</div>
-      <button onClick={() => getData()}>Call the GET Endpoint</button>
+      <button onClick={() => testSearch()}>Call the GET Endpoint</button>
       <br />
       <br />
 
