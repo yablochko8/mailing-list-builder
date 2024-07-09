@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { dbClient } from "./utils/dbClient";
+import senderRouter from "./routing/controllers/sender";
 
 export const PORT = 4101;
 
@@ -8,6 +9,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+app.use("/api/sender", senderRouter);
 
 /**
  * New sender, requires clerkId, name, email

@@ -57,7 +57,7 @@ import { Sender } from "@prisma/client";
 // };
 
 export type SenderOutput = {
-  senders: Sender[];
+  items: Sender[];
 };
 
 export type TransferTypes = {
