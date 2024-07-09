@@ -1,6 +1,6 @@
 import express from "express";
 import { dbClient } from "../../utils/dbClient";
-import { getAllHandler, getOneHandler } from "../genericHandlers";
+import { getAll, getOne, getSearch } from "../genericHandlers";
 
 const router = express.Router();
 
@@ -9,8 +9,9 @@ const focus = "sender";
 
 const dbTable = dbClient[focus];
 
-router.get("/all", getAllHandler(focus));
-router.get("/:id", getOneHandler(focus));
+router.get("/all", getAll(focus));
+router.get("/:id", getOne(focus));
+router.get("/search/:query", getSearch(focus));
 
 // *
 // * POST /sender/new     ->  clerkId, name, email
