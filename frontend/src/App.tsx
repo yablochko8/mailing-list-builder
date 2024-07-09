@@ -35,6 +35,24 @@ const postDataAndDisplayResponse = async (
   return json.messages; // unused here
 };
 
+
+const addOneRecipient = async (
+  senderId: number,
+  name: string,
+  email: string
+) => {
+  const response = await fetch(`${serverPath}/api/recipient/new`, {
+    method: "POST",
+    body: JSON.stringify({ senderId, name, email }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  console.log("The server response was:", json);
+  return json.messages; // unused here
+};
+
 const getAllSender = async () => {
   const response = await fetch(`${serverPath}/api/sender/all`, {
     method: "GET",
@@ -67,9 +85,11 @@ const testSearch = async () => {
     },
   });
   const json = await response.json();
-  console.log("The server response was:", json);
+  console.log("The server response was:", json.items);
   return json.message; // unused here
 };
+
+
 
 function App() {
   const [submittedValue, setSubmittedValue] = useState("");
@@ -90,6 +110,15 @@ function App() {
           setSubmittedValue(e.target.value);
         }}
       />
+
+      <br />
+      <button
+        onClick={() =>
+          addOneRecipient(1, "Jimmy", "jim15@blahhhh.com")
+        }
+      >
+        Add One Recipient
+      </button>
       <br />
       <button
         onClick={() =>

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { dbClient } from "./utils/dbClient";
 import senderRouter from "./routing/controllers/sender";
+import recipientRouter from "./routing/controllers/recipient";
 
 export const PORT = 4101;
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/sender", senderRouter);
+app.use("/api/recipient", recipientRouter);
 
 // /**
 //  * New sender, requires clerkId, name, email
