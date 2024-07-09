@@ -96,7 +96,7 @@ export const ApiDashboard = ({ apiService }: { apiService: typeof prodService })
             }}>newItem</button>
 
             <button onClick={() => {
-                update(inputId, bodyParams)
+                update(inputId, JSON.parse(bodyParams))
                     .then(response => setValuesFromServer([JSON.stringify(response)]))
                     .catch(error => setValuesFromServer([`Error: ${error.message}`]));
             }}>update</button>
