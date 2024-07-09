@@ -12,6 +12,9 @@ export const getAll =
   ) => {
     console.log("GET /all route called:", table);
     const answerList = await dbClient[table].findMany({
+      where: {
+        deletedAt: null,
+      },
       take: limit,
     });
     res.json({ items: answerList });
@@ -36,6 +39,7 @@ export const getSearch =
           contains: query,
           mode: "insensitive",
         },
+        deletedAt: null,
       },
       take: limit,
     });
@@ -58,7 +62,37 @@ export const getOne =
     const answer = await dbClient[table].findUnique({
       where: {
         id: Number(id),
+        deletedAt: null,
       },
     });
     res.json({ items: answer ? [answer] : [] });
+  };
+
+/**
+ * Deletes a single record from the specified table by its ID.
+ */
+export const deleteOne =
+  <Table extends keyof TransferTypes>(table: Table) =>
+  async (
+    req: TransferTypes[Table]["req"],
+    res: TransferTypes[Table]["res"]
+  ) => {
+    console.log("DELETE /:id route called with:", table);
+    const { id } = req.params;
+    console.log("id:", id);
+
+    try {
+      const deletedRecord = await dbClient[table].update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          deletedAt: new Date(),
+        },
+      });
+      res.json({ items: [deletedRecord] });
+    } catch (error) {
+      console.error("Error deleting record:", error);
+      res.status(500).send();
+    }
   };
