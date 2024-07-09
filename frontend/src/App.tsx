@@ -11,8 +11,8 @@ function App() {
   const [selectedComponent, setSelectedComponent] = useState("ListMgmt");
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-      <div>
+    <div className="flex flex-col justify-start">
+      <div className="flex flex-row justify-center">
         <select value={selectedComponent} onChange={(e) => setSelectedComponent(e.target.value)}>
           <option value="ListMgmt">List Management</option>
           <option value="ApiDashboard">API Dashboard</option>
