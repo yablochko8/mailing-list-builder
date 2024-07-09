@@ -71,7 +71,7 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
 
     return (
         <div>
-            <div className="font-bold underline text-red-600">Mailing Lists</div>
+            <div className="font-bold text-red-600">Mailing Lists</div>
 
             {showCreatePopup && (
 
