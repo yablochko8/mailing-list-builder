@@ -1,4 +1,4 @@
-import { ApiService, DBTable } from "../../../shared";
+import { ApiService, DBTable } from "shared";
 
 const mockService = (table: DBTable): ApiService => ({
   getAll: () => {
