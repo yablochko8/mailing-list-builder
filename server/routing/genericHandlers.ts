@@ -11,7 +11,7 @@ export const getAll =
     res: TransferTypes[Table]["res"]
   ) => {
     console.log("GET /all route called:", table);
-    const answerList = await dbClient[table].findMany({
+    const answerList = await (dbClient[table] as any).findMany({
       where: {
         deletedAt: null,
       },
@@ -33,7 +33,7 @@ export const getSearch =
     console.log("GET /search route called:", table);
     const { query } = req.params;
     console.log(`Searching the name field for query: ${query}`);
-    const answerList = await dbClient[table].findMany({
+    const answerList = await (dbClient[table] as any).findMany({
       where: {
         name: {
           contains: query,
@@ -59,7 +59,7 @@ export const getOne =
     const { id } = req.params;
     console.log("id:", id);
 
-    const answer = await dbClient[table].findUnique({
+    const answer = await (dbClient[table] as any).findUnique({
       where: {
         id: Number(id),
         deletedAt: null,
@@ -82,7 +82,7 @@ export const deleteOne =
     console.log("id:", id);
 
     try {
-      const deletedRecord = await dbClient[table].update({
+      const deletedRecord = await (dbClient[table] as any).update({
         where: {
           id: Number(id),
         },

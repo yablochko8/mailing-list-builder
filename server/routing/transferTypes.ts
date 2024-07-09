@@ -50,16 +50,32 @@
  */
 
 import { Request, Response } from "express";
-import { Sender } from "@prisma/client";
-
-// export type SenderInput = {
-//   email: string;
-// };
+import { List, Recipient, Sender, Blast, Message } from "@prisma/client";
 
 export type SenderOutput = {
   items: Sender[];
 };
 
+type RecipientOutput = {
+  items: Recipient[];
+};
+
+type ListOutput = {
+  items: List[];
+};
+
+type BlastOutput = {
+  items: Blast[];
+};
+
+type MessageOutput = {
+  items: Message[];
+};
+
 export type TransferTypes = {
   sender: { req: Request; res: Response<SenderOutput> };
+  recipient: { req: Request; res: Response<RecipientOutput> };
+  list: { req: Request; res: Response<ListOutput> };
+  blast: { req: Request; res: Response<BlastOutput> };
+  message: { req: Request; res: Response<MessageOutput> };
 };
