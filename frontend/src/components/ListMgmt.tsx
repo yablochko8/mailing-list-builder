@@ -71,11 +71,13 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
 
     return (
         <div>
-            <h2>Mailing Lists</h2>
-            <button onClick={() => setShowCreatePopup(true)}>Create New</button>
+            <div className="font-bold underline text-red-600">Mailing Lists</div>
 
             {showCreatePopup && (
+
                 <div className="popup">
+                    <button onClick={() => setShowCreatePopup(false)}>Back to Search</button>
+
                     <h3>Create New List</h3>
                     <input
                         type="text"
@@ -90,6 +92,8 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
 
             {!showCreatePopup && (
                 <div>
+                    <button onClick={() => setShowCreatePopup(true)}>Create New</button>
+
                     <div>
                         <input
                             type="text"
@@ -101,12 +105,12 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
                     </div>
                     <ul>
                         {lists.map((list) => (
-                            <li key={list.id}>
-                                <span>{list.name}</span>
-                                <span> - Recipients: {list.recipientCount}</span>
+                            <div key={list.id} className="list-item">
+                                <span className="list-name">{list.name}</span>
+                                <span className="recipient-count"> - Recipients: {list.recipientCount}</span>
                                 <button onClick={() => handleDelete(list.id)}>Delete</button>
-                                <button onClick={() => handleChangeName(list.id)}>Change Name</button>
-                            </li>
+                                <button onClick={() => handleChangeName(list.id)}>Rename</button>
+                            </div>
                         ))}
                     </ul>
 

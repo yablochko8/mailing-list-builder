@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ApiServiceFactory, DataType, dataTypes } from "shared";
 
 
-export const ApiDashboard = ({ apiService }: { apiService: ApiServiceFactory }) => {
+export const DevApiDashboard = ({ serviceFactory }: { serviceFactory: ApiServiceFactory }) => {
 
     const [dataType, setDataType] = useState<DataType>(dataTypes[0]);
     const [inputId, setInputId] = useState<number>(1);
@@ -10,7 +10,7 @@ export const ApiDashboard = ({ apiService }: { apiService: ApiServiceFactory }) 
     const [bodyParams, setBodyParams] = useState<any>({});
     const [valuesFromServer, setValuesFromServer] = useState(["nothing yet"]);
 
-    const { getAll, getOne, search, deleteItem, newItem, updateItem } = apiService(dataType)
+    const { getAll, getOne, search, deleteItem, newItem, updateItem } = serviceFactory(dataType)
 
     return (
         <>
