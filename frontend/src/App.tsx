@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import prodService from "./services/prodService";
 
 export const PORT = 4101; // change this to an import before doing anything serious
 
@@ -89,7 +90,24 @@ const testSearch = async () => {
   return json.message; // unused here
 };
 
+const apiService = prodService
 
+const tableList = [
+  "sender",
+  "recipient",
+  "list",
+  "blast",
+  "message"
+] as const; // this tells TS to treat list as readonly tuple with specific string literal types
+
+type tableName = typeof tableList[number];
+
+const getAll = (table: tableName) => apiService.getAll(table);
+const getOne = (id: number) => apiService.getOne(tableList[0], id)
+const search = (query: string) => apiService.search(tableList[0], query)
+const deleteItem = (id: number) => apiService.delete(tableList[0], id)
+const newItem = (data: any) => apiService.new(tableList[0], data)
+const update = (id: number, data: any) => apiService.update(tableList[0], id, data)
 
 function App() {
   const [submittedValue, setSubmittedValue] = useState("");
@@ -114,10 +132,10 @@ function App() {
       <br />
       <button
         onClick={() =>
-          addOneRecipient(1, "Jimmy", "jim15@blahhhh.com")
+          search("Jimmy")
         }
       >
-        Add One Recipient
+        Search for Jimmy in senders
       </button>
       <br />
       <button

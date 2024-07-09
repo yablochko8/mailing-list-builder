@@ -11,10 +11,10 @@ type Options = RequestInit & CustomOptions;
 // @TODO replace me with real auth
 const getToken = () => "WHAT UP";
 
-const makeRequest = (path: string, options?: Options) => {
+const makeRequest = async (path: string, options?: Options) => {
   const token = getToken();
 
-  return fetch(CONFIG.BASE_URL + path, {
+  const response = await fetch(CONFIG.BASE_URL + path, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -23,6 +23,10 @@ const makeRequest = (path: string, options?: Options) => {
     },
     body: options?.body ? JSON.stringify(options.body) : undefined,
   });
+
+  const json = await response.json();
+  console.log("The server response was:", json);
+  return json;
 };
 
 export default makeRequest;

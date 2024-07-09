@@ -24,6 +24,27 @@ import makeRequest from "./util/makeRequest";
  */
 
 const prodService = {
-  // look up here
+  getAll: (table: keyof typeof API_PATHS) => {
+    return makeRequest(API_PATHS[table].getAll);
+  },
+  getOne: (table: keyof typeof API_PATHS, id: number) => {
+    return makeRequest(API_PATHS[table].getOne(id));
+  },
+  search: (table: keyof typeof API_PATHS, query: string) => {
+    return makeRequest(API_PATHS[table].search(query));
+  },
+  delete: (table: keyof typeof API_PATHS, id: number) => {
+    return makeRequest(API_PATHS[table].delete(id), { method: "DELETE" });
+  },
+  new: (table: keyof typeof API_PATHS, data: any) => {
+    return makeRequest(API_PATHS[table].new, { method: "POST", body: data });
+  },
+  update: (table: keyof typeof API_PATHS, id: number, data: any) => {
+    return makeRequest(API_PATHS[table].update(id), {
+      method: "PUT",
+      body: data,
+    });
+  },
 };
+
 export default prodService;
