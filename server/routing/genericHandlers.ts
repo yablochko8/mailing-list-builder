@@ -1,6 +1,9 @@
 import { dbClient } from "../utils/dbClient";
 import { TransferTypes } from "./transferTypes";
 
+/**
+ * Retrieves all records from the specified table with an optional limit.
+ */
 export const getAll =
   <Table extends keyof TransferTypes>(table: Table, limit: number = 10) =>
   async (
@@ -14,6 +17,10 @@ export const getAll =
     res.json({ items: answerList });
   };
 
+/**
+ * Returned function will searches a named table and return { items : something[] }
+ * Only searches the "name" column of the table for now.
+ */
 export const getSearch =
   <Table extends keyof TransferTypes>(table: Table, limit: number = 10) =>
   async (
@@ -35,6 +42,9 @@ export const getSearch =
     res.json({ items: answerList });
   };
 
+/**
+ * Retrieves a single record from the specified table by its ID.
+ */
 export const getOne =
   <Table extends keyof TransferTypes>(table: Table) =>
   async (
