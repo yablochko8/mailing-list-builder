@@ -1,4 +1,4 @@
-import { ApiService } from "shared";
+import { ApiService, ApiServiceFactory, DBTable } from "shared";
 import { API_PATHS } from "./util/config";
 import makeRequest from "./util/makeRequest";
 
@@ -24,7 +24,7 @@ import makeRequest from "./util/makeRequest";
  * The paths for these functions can be found in API_PATHS
  */
 
-const prodService = (table: keyof typeof API_PATHS): ApiService => ({
+const prodServiceFactory: ApiServiceFactory = (table: DBTable): ApiService => ({
   getAll: () => {
     return makeRequest(API_PATHS[table].getAll);
   },
@@ -34,13 +34,13 @@ const prodService = (table: keyof typeof API_PATHS): ApiService => ({
   search: (query: string) => {
     return makeRequest(API_PATHS[table].search(query));
   },
-  delete: (id: number) => {
+  deleteItem: (id: number) => {
     return makeRequest(API_PATHS[table].delete(id), { method: "DELETE" });
   },
-  new: (data: any) => {
+  newItem: (data: any) => {
     return makeRequest(API_PATHS[table].new, { method: "POST", body: data });
   },
-  update: (id: number, data: any) => {
+  updateItem: (id: number, data: any) => {
     return makeRequest(API_PATHS[table].update(id), {
       method: "PUT",
       body: data,
@@ -48,4 +48,4 @@ const prodService = (table: keyof typeof API_PATHS): ApiService => ({
   },
 });
 
-export default prodService;
+export default prodServiceFactory;

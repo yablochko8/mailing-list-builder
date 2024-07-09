@@ -1,6 +1,7 @@
 import "./App.css";
-import prodService from "./services/prodService";
+import prodServiceFactory from "./services/prodService";
 import { ApiDashboard } from "./components/ApiTesterDashboard";
+import { ListMgmt } from "./components/ListMgmt";
 // import mockService from "./services/mockService";
 
 
@@ -10,7 +11,10 @@ function App() {
 
   return (
     <>
-      <ApiDashboard apiService={prodService} />
+      <ListMgmt senderId={1} />
+
+
+      {/* <ApiDashboard apiService={prodServiceFactory} /> */}
     </>
 
   );
