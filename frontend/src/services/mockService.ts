@@ -1,30 +1,30 @@
-import { API_PATHS } from "./util/config";
+import { ApiService, DBTable } from "../../../shared";
 
-const mockService = {
-  getAll: (table: keyof typeof API_PATHS) => {
+const mockService = (table: DBTable): ApiService => ({
+  getAll: () => {
     console.log("getAll called with table:", table);
     return Promise.resolve({ items: [] });
   },
-  getOne: (table: keyof typeof API_PATHS, id: string) => {
+  getOne: (id: number) => {
     console.log("getOne called with table:", table, "id:", id);
     return Promise.resolve({});
   },
-  search: (table: keyof typeof API_PATHS, query: string) => {
+  search: (query: string) => {
     console.log("search called with table:", table, "query:", query);
     return Promise.resolve({ items: [] });
   },
-  delete: (table: keyof typeof API_PATHS, id: string) => {
+  delete: (id: number) => {
     console.log("delete called with table:", table, "id:", id);
     return Promise.resolve({});
   },
-  new: (table: keyof typeof API_PATHS, data: any) => {
+  new: (data: any) => {
     console.log("new called with table:", table, "data:", data);
-    return Promise.resolve({ ...data, id: "mock-id" });
+    return Promise.resolve({ ...data, id: 1 }); // Using a number for the mock id
   },
-  update: (table: keyof typeof API_PATHS, id: string, data: any) => {
+  update: (id: number, data: any) => {
     console.log("update called with table:", table, "id:", id, "data:", data);
     return Promise.resolve({ ...data, id });
   },
-};
+});
 
 export default mockService;
