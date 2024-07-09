@@ -56,13 +56,17 @@ router.put("/:id", async (req, res) => {
   console.log("Updating entry using data:", updateData);
 
   try {
+    // Don't let REST calls change system columns or other sensitive
     const fieldsToExclude = [
       "id",
       "createdAt",
       "updatedAt",
       "deletedAt",
       "version",
+      // add in clerkId here? maybe
     ];
+    // Look at all other columns in the database, and any of these that are present
+    // in the req body should be treated as updates
     const fieldsToUpdate = Object.keys(dbTable.fields).reduce((acc, field) => {
       if (updateData[field] !== undefined && !fieldsToExclude.includes(field)) {
         acc[field] = updateData[field];
@@ -70,7 +74,8 @@ router.put("/:id", async (req, res) => {
       return acc;
     }, {});
 
-    const updatedSender = await dbTable.update({
+    // Apply the update
+    const updatedItem = await dbTable.update({
       where: { id: Number(id) },
       data: {
         ...fieldsToUpdate,
@@ -79,7 +84,9 @@ router.put("/:id", async (req, res) => {
         },
       },
     });
-    res.json({ items: [updatedSender] });
+
+    // Return the updated item
+    res.json({ items: [updatedItem] });
   } catch (error) {
     console.error("Error updating:", error);
     res.status(500).json({ error: "Internal Server Error" });
