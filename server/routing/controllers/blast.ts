@@ -2,7 +2,7 @@ import express from "express";
 import { dbClient } from "../../utils/dbClient";
 import { deleteOne, getAll, getOne, getSearch } from "../genericHandlers";
 
-const focus = "sender";
+const focus = "blast";
 
 /**
  * <STANDARD ROUTES>
@@ -26,14 +26,13 @@ const dbTable = dbClient[focus];
  */
 router.post("/new", async (req, res) => {
   console.log("POST /new endpoint called.");
-  const { clerkId, name, email } = req.body;
+  const { name, senderId } = req.body;
   console.log("Creating entry using data:", req.body);
   try {
     const newItem = await dbTable.create({
       data: {
-        clerkId,
         name,
-        email,
+        senderId,
       },
     });
     res.json({ items: newItem });
@@ -93,6 +92,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-const senderRouter = router;
+const blastRouter = router;
 
-export default senderRouter;
+export default blastRouter;

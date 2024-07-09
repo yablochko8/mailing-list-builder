@@ -52,6 +52,8 @@ model Recipient {
   deletedAt     DateTime?
   version       Int       @default(1)
 
+  @@unique([senderId, email]) // This is a compound unique constraint
+
   @@map("recipient")
 }
 
