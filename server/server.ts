@@ -3,6 +3,9 @@ import cors from "cors";
 import { dbClient } from "./utils/dbClient";
 import senderRouter from "./routing/controllers/sender";
 import recipientRouter from "./routing/controllers/recipient";
+import listRouter from "./routing/controllers/list";
+import blastRouter from "./routing/controllers/blast";
+import messageRouter from "./routing/controllers/message";
 
 export const PORT = 4101;
 
@@ -13,6 +16,9 @@ app.use(cors());
 
 app.use("/api/sender", senderRouter);
 app.use("/api/recipient", recipientRouter);
+app.use("/api/list", listRouter);
+app.use("/api/blast", blastRouter);
+app.use("/api/message", messageRouter);
 
 // /**
 //  * New sender, requires clerkId, name, email
@@ -37,17 +43,17 @@ app.use("/api/recipient", recipientRouter);
 //     });
 //     res.status(201).json(newSender);
 //   } catch (error) {
-//     console.error("Error creating new sender:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
+// //     console.error("Error creating new sender:", error);
+// //     res.status(500).json({ error: "Internal server error" });
+// //   }
+// // });
 
-app.post("/sender/new", async (req, res) => {
-  console.log("POST endpoint called.");
-  const newMessage = req.body.message;
-  storedValues.push(newMessage);
-  res.json({ messages: storedValues });
-});
+// app.post("/sender/new", async (req, res) => {
+//   console.log("POST endpoint called.");
+//   const newMessage = req.body.message;
+//   storedValues.push(newMessage);
+//   res.json({ messages: storedValues });
+// });
 
 app.get("/", async (req, res) => {
   console.log("GET endpoint called.");
@@ -56,12 +62,12 @@ app.get("/", async (req, res) => {
 
 const storedValues: string[] = [];
 
-app.post("/newmessage", async (req, res) => {
-  console.log("POST endpoint called.");
-  const newMessage = req.body.message;
-  storedValues.push(newMessage);
-  res.json({ messages: storedValues });
-});
+// app.post("/newmessage", async (req, res) => {
+//   console.log("POST endpoint called.");
+//   const newMessage = req.body.message;
+//   storedValues.push(newMessage);
+//   res.json({ messages: storedValues });
+// });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
