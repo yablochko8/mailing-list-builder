@@ -10,53 +10,31 @@ app.use(express.json());
 app.use(cors());
 
 /**
- *
- * Creating new things
- *
- * POST /sender/new     ->  clerkId, name, email
- * PUT  /sender/:id     +   List[], Blast[]
- * GET  /sender/:id
- * GET  /sender/all
- *
- * POST /recipient/new  ->  Sender, name, email
- * PUT  /recipient/:id  +   Message[], Lists[]
- * GET  /recipient/:id
- * POST /recipient/all
- *
- * POST /list/new       ->  Sender, name
- * PUT  /list/:id       +   Recipient[], Blast[]
- * GET  /list/:id
- * GET  /list/all
- *
- * POST /blast/new      ->  Sender, name
- * PUT  /blast/:id      +   List[], Message[], status
- * GET  /blast/:id
- * GET  /blast/all
- *
- * POST /message/new    ->  Blast, Recipient
- * PUT  /message/:id    +   content, status, sentAt, mailClient
- * GET  /message/:id
- * GET  /message/all
- *
- * Add later...
- *
- * DELETE /sender/:id
- * DELETE /recipient/:id
- * DELETE /list/:id
- * DELETE /blast/:id
- * DELETE /message/:id
- *
- *
- */
-
-/**
  * New sender, requires clerkId, name, email
  */
 app.post("/sender/new", async (req, res) => {
   console.log("POST endpoint called.");
-  const newMessage = req.body.message;
-  storedValues.push(newMessage);
-  res.json({ messages: storedValues });
+  const { clerkId, name, email } = req.body;
+
+  if (!clerkId || !name || !email) {
+    return res
+      .status(400)
+      .json({ error: "clerkId, name, and email are required" });
+  }
+
+  try {
+    const newSender = await dbClient.sender.create({
+      data: {
+        clerkId,
+        name,
+        email,
+      },
+    });
+    res.status(201).json(newSender);
+  } catch (error) {
+    console.error("Error creating new sender:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post("/sender/new", async (req, res) => {
