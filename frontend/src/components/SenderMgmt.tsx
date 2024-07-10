@@ -72,6 +72,7 @@ export const ContentManager = (props: ContentManagerProps) => {
     const [key, setKey] = useState(0); // Add this line
 
     const { getAll, search, deleteItem, newItem, updateItem } = apiServiceFactory(props.dataType)
+    const title = props.dataType.charAt(0).toUpperCase() + props.dataType.slice(1) + "s"
 
     useEffect(() => {
         fetchLists();
@@ -125,7 +126,7 @@ export const ContentManager = (props: ContentManagerProps) => {
 
     return (
         <div>
-            <div className={sectionTitle}>Mailing Lists</div>
+            <div className={sectionTitle}>{title}</div>
 
             {createToggle && (<NewItemMaker key={key} dataType={props.dataType} onCancel={() => setCreateToggle(false)} onCreated={handleCreated} />
             )}
