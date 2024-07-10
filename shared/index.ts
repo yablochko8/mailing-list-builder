@@ -59,7 +59,7 @@ export type ApiServiceFactory = (
 
 export const DefaultCreationValues = {
   sender: { name: "", clerkId: "", email: "email@example.com" },
-  recipient: { name: "", senderId: 1 },
+  recipient: { name: "", senderId: 1, email: "email@example.com" },
   list: { name: "", senderId: 1 },
   blast: { name: "", listId: 1 },
   message: { content: "", blastId: 1 },

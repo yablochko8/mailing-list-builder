@@ -1,6 +1,12 @@
 import express from "express";
 import { dbClient } from "../../utils/dbClient";
-import { deleteOne, getAll, getOne, getSearch } from "../genericHandlers";
+import {
+  deleteOne,
+  getAll,
+  getOne,
+  getSearch,
+  getSearchWithAuth,
+} from "../genericHandlers";
 
 const focus = "recipient";
 
@@ -10,7 +16,7 @@ const focus = "recipient";
 const router = express.Router();
 router.get("/all", getAll(focus));
 router.get("/:id", getOne(focus));
-router.get("/search/:query", getSearch(focus));
+router.get("/search/:query", getSearchWithAuth(focus));
 router.delete("/:id", deleteOne(focus));
 /**
  * </STANDARD ROUTES>
