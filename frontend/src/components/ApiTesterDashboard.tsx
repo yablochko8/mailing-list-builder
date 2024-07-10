@@ -1,4 +1,4 @@
-import { flexCol, flexRowMP2, inputBox, primaryButton, secondaryButton, sectionDetail, sectionSubTitle, sectionTitle } from "@/styling/classNames";
+import { flexCol, flexRowMP2, inputBox, primaryButton, secondaryButton, sectionDetail, sectionSubTitle } from "@/styling/classNames";
 import { useState } from "react";
 import { ApiServiceFactory, DataType, dataTypes } from "shared";
 
