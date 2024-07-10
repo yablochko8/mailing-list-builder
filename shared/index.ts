@@ -36,3 +36,11 @@ export type ApiService = {
 export type DBTable = keyof typeof API_PATHS;
 
 export type ApiServiceFactory = (table: DataType) => ApiService;
+
+export const DefaultCreationValues = {
+  sender: { name: "", clerkId: "", email: "email@example.com" },
+  recipient: { name: "", senderId: 1 },
+  list: { name: "", senderId: 1 },
+  blast: { name: "", listId: 1 },
+  message: { content: "", blastId: 1 },
+};
