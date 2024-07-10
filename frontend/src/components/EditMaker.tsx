@@ -15,7 +15,7 @@ export const EditButton = ({ id, dataType }: { id: number, dataType: DataType; }
 
     return (
         <>
-            <button onClick={toggleModal} className={microButton}>Edit2</button>
+            <button onClick={toggleModal} className={microButton}>Edit</button>
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg">

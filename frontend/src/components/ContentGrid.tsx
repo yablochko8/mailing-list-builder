@@ -1,8 +1,8 @@
 import { makePascal } from "@/services/util/makePascal";
-import { microButton, sectionSubTitle, sectionDetail, primaryButton, secondaryButton, standardButton } from "@/styling/classNames";
+import { microButton, sectionSubTitle, sectionDetail } from "@/styling/classNames";
 import { DataType, apiServiceFactory } from "shared";
-import { EditButton, EditModalContents } from "./EditMaker";
-import { useState } from "react";
+import { EditButton } from "./EditMaker";
+// import { useState } from "react";
 
 
 
@@ -26,7 +26,7 @@ export const ContentGrid = (props: ContentGridProps) => {
         "version",
         "clerkId",
     ];
-    const { deleteItem, updateItem } = apiServiceFactory(dataType);
+    const { deleteItem } = apiServiceFactory(dataType);
 
     const handleDelete = async (id: number) => {
         try {
@@ -36,24 +36,6 @@ export const ContentGrid = (props: ContentGridProps) => {
         }
         onChange();
     };
-
-
-    const handleEdit = async (id: number) => {
-        const newName = prompt("Enter new name for the list:");
-        if (newName !== null) {
-            try {
-                await updateItem(id, { name: newName });
-            } catch (error) {
-                console.error("Error updating list name:", error);
-            }
-        }
-        onChange();
-    };
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-
 
 
 
@@ -77,7 +59,6 @@ export const ContentGrid = (props: ContentGridProps) => {
                             </div>
                         ))}
                         <div>
-                            <button onClick={() => handleEdit(item.id)} className={microButton}>Edit</button>
                             <EditButton id={item.id} dataType={dataType} />
                         </div>
                         <div>
