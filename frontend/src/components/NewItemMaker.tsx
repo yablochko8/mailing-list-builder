@@ -1,3 +1,4 @@
+import { makePascal } from "@/services/util/makePascal";
 import { inputBox, sectionSubTitle, primaryButton, standardButton, flexCol, flexRowSimple } from "@/styling/classNames";
 import { useState } from "react";
 import { DataType, DefaultCreationValues, apiServiceFactory } from "shared";
@@ -14,7 +15,7 @@ export const NewItemMaker = (props: NewItemProps) => {
 
     const [newItemDetails, setNewItemDetails] = useState(DefaultCreationValues[dataType]);
 
-    const newItem = apiServiceFactory(dataType).newItem;
+    const { newItem } = apiServiceFactory(dataType);
 
     const handleCreate = async () => {
         try {
@@ -37,14 +38,14 @@ export const NewItemMaker = (props: NewItemProps) => {
 
             {Object.keys(newItemDetails).map((inputField) => (
                 <div className={flexCol}>
-                    <div className={flexRowSimple}>{inputField.charAt(0).toUpperCase() + inputField.slice(1)}</div>
+                    <div className={flexRowSimple}>{makePascal(inputField)}</div>
                     <div className={flexRowSimple}>
                         <input
                             key={inputField}
                             type={typeof (DefaultCreationValues[dataType] as any)[inputField] === "number" ? "number" : "text"}
                             value={(newItemDetails as any)[inputField]}
                             onChange={(e) => setNewItemDetails({ ...newItemDetails, [inputField]: e.target.value })}
-                            placeholder={inputField.charAt(0).toUpperCase() + inputField.slice(1)}
+                            placeholder={makePascal(inputField)}
                             className={inputBox} />
                     </div>
                 </div>
