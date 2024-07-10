@@ -61,3 +61,16 @@ export const DefaultCreationValues = {
   blast: { name: "", listId: 1 },
   message: { content: "", blastId: 1 },
 };
+
+/**
+ * Fields we don't want to show to customers, especially in editing screens.
+ */
+export const fieldsToExclude = [
+  "id",
+  "createdAt",
+  "updatedAt",
+  "deletedAt",
+  "version",
+  "clerkId",
+  "senderId",
+];

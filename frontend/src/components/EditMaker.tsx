@@ -1,9 +1,7 @@
 import { makePascal } from "@/services/util/makePascal";
 import { inputBox, sectionSubTitle, primaryButton, standardButton, flexCol, flexRowSimple, microButton, sectionDetail } from "@/styling/classNames";
 import { useEffect, useState } from "react";
-import { DataType, DefaultCreationValues, apiServiceFactory, DataShapes } from "shared";
-
-
+import { DataType, DefaultCreationValues, apiServiceFactory, DataShapes, fieldsToExclude } from "shared";
 
 
 export const EditButton = ({ id, dataType }: { id: number, dataType: DataType; }) => {
@@ -47,8 +45,8 @@ export const EditModalContents = (props: EditMakerProps) => {
     useEffect(() => {
         const fetchItemDetails = async () => {
             try {
-                const latestDetails = await getOne(id);
-                setItemDetails(latestDetails);
+                const detailsFromAPI = await getOne(id);
+                setItemDetails(detailsFromAPI.items[0]);
             } catch (error) {
                 console.error(`Error fetching ${dataType} details:`, error);
             }
@@ -76,23 +74,26 @@ export const EditModalContents = (props: EditMakerProps) => {
             <p className={sectionDetail}>ID: {id}</p>
 
             {itemDetails && Object.keys(itemDetails).length > 0 ? (
-                Object.keys(itemDetails).map((inputField) => (
-                    <div key={inputField} className={flexCol}>
-                        <div className={flexRowSimple}>{inputField.charAt(0).toUpperCase() + inputField.slice(1)}</div>
-                        <div className={flexRowSimple}>
-                            <input
-                                type={typeof (DefaultCreationValues[dataType] as any)[inputField] === "number" ? "number" : "text"}
-                                value={(itemDetails as any)[inputField] || ""}
-                                onChange={(e) => setItemDetails({ ...itemDetails, [inputField]: e.target.value })}
-                                placeholder={inputField.charAt(0).toUpperCase() + inputField.slice(1)}
-                                className={inputBox}
-                            />
+                Object.keys(itemDetails)
+                    .filter(inputField => !fieldsToExclude.includes(inputField))
+                    .map((inputField) => (
+                        <div key={inputField} className={flexCol}>
+                            <div className={flexRowSimple}>{inputField.charAt(0).toUpperCase() + inputField.slice(1)}</div>
+                            <div className={flexRowSimple}>
+                                <input
+                                    type={typeof (DefaultCreationValues[dataType] as any)[inputField] === "number" ? "number" : "text"}
+                                    value={(itemDetails as any)[inputField] || ""}
+                                    onChange={(e) => setItemDetails({ ...itemDetails, [inputField]: e.target.value })}
+                                    placeholder={inputField.charAt(0).toUpperCase() + inputField.slice(1)}
+                                    className={inputBox}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))
+                    ))
             ) : (
-                <div></div>
+                <div>Loading...</div>
             )}
+
 
             <div className={flexRowSimple}>
                 <button onClick={handleSave} className={primaryButton}>Save</button>

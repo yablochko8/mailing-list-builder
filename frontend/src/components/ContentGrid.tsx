@@ -78,7 +78,7 @@ export const ContentGrid = (props: ContentGridProps) => {
                         ))}
                         <div>
                             <button onClick={() => handleEdit(item.id)} className={microButton}>Edit</button>
-                            <EditButton id={1} dataType={dataType} />
+                            <EditButton id={item.id} dataType={dataType} />
                         </div>
                         <div>
                             <button onClick={() => handleDelete(item.id)} className={microButton}>Delete</button>

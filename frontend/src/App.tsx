@@ -31,6 +31,7 @@ function App() {
           {selectedComponent === "blast" && <ContentManager dataType="blast" />}
           {selectedComponent === "message" && <ContentManager dataType="message" />}
           {selectedComponent === "Internal" && <DevApiDashboard serviceFactory={prodServiceFactory} />}
+
         </div>
 
       </div>
