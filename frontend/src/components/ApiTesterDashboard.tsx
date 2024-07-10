@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { DataType, dataTypes } from "shared";
-import prodService from "../services/prodService";
+import { ApiServiceFactory, DataType, dataTypes } from "shared";
 
 
-export const ApiDashboard = ({ apiService }: { apiService: typeof prodService }) => {
+export const DevApiDashboard = ({ serviceFactory }: { serviceFactory: ApiServiceFactory }) => {
 
     const [dataType, setDataType] = useState<DataType>(dataTypes[0]);
     const [inputId, setInputId] = useState<number>(1);
@@ -11,7 +10,7 @@ export const ApiDashboard = ({ apiService }: { apiService: typeof prodService })
     const [bodyParams, setBodyParams] = useState<any>({});
     const [valuesFromServer, setValuesFromServer] = useState(["nothing yet"]);
 
-    const { getAll, getOne, search, delete: deleteItem, new: newItem, update } = apiService(dataType)
+    const { getAll, getOne, search, deleteItem, newItem, updateItem } = serviceFactory(dataType)
 
     return (
         <>
@@ -96,7 +95,7 @@ export const ApiDashboard = ({ apiService }: { apiService: typeof prodService })
             }}>newItem</button>
 
             <button onClick={() => {
-                update(inputId, JSON.parse(bodyParams))
+                updateItem(inputId, JSON.parse(bodyParams))
                     .then(response => setValuesFromServer([JSON.stringify(response)]))
                     .catch(error => setValuesFromServer([`Error: ${error.message}`]));
             }}>update</button>
