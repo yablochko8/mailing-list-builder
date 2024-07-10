@@ -12,7 +12,13 @@ export const sectionDetail = `text-gray-600 text-sm mb-1`;
 
 export const flexRowBordered = flexRowMP2 + ` border-solid border rounded-lg`;
 
-export const buttonShared = `text-white font-bold py-2 px-4 rounded-lg m-1 `;
+// BUTTONS
+const headerButtonShared =
+  "m-2 px-4 py-2 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75";
+export const selectedHeaderButton = `${headerButtonShared} bg-zinc-500 text-white hover:bg-blue-700 focus:ring-blue-400`;
+export const unselectedHeaderButton = `${headerButtonShared} bg-gray-300 text-gray-700 hover:bg-gray-400 focus:ring-gray-400`;
+
+const buttonShared = `text-white font-bold py-2 px-4 rounded-lg m-1 `;
 export const primaryButton = buttonShared + `bg-green-500 hover:bg-green-700`;
 export const secondaryButton = buttonShared + `bg-blue-500 hover:bg-blue-700`;
 export const standardButton = buttonShared + `bg-gray-400 hover:bg-gray-600`;

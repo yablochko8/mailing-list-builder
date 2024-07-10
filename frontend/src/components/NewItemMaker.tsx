@@ -35,23 +35,27 @@ export const NewItemMaker = (props: NewItemProps) => {
             </div>
 
 
-            {Object.keys(newItemDetails).map((key) => (
-                <div className={flexRowSimple}>
-                    <input
-                        key={key}
-                        type="text"
-                        value={(newItemDetails as any)[key]}
-                        onChange={(e) => setNewItemDetails({ ...newItemDetails, [key]: e.target.value })}
-                        placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
-                        className={inputBox} />
+            {Object.keys(newItemDetails).map((inputField) => (
+                <div className={flexCol}>
+                    <div className={flexRowSimple}>{inputField.charAt(0).toUpperCase() + inputField.slice(1)}</div>
+                    <div className={flexRowSimple}>
+                        <input
+                            key={inputField}
+                            type={typeof (DefaultCreationValues[dataType] as any)[inputField] === "number" ? "number" : "text"}
+                            value={(newItemDetails as any)[inputField]}
+                            onChange={(e) => setNewItemDetails({ ...newItemDetails, [inputField]: e.target.value })}
+                            placeholder={inputField.charAt(0).toUpperCase() + inputField.slice(1)}
+                            className={inputBox} />
+                    </div>
                 </div>
-            ))}
+            ))
+            }
 
             <div className={flexRowSimple}>
                 <button onClick={handleCreate} className={primaryButton}>Create</button>
                 <button onClick={() => onCancel()} className={standardButton}>Cancel</button>
             </div>
-        </div>
+        </div >
     );
 
 };

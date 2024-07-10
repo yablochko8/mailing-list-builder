@@ -1,8 +1,7 @@
 import { inputBox, sectionTitle, secondaryButton, primaryButton, flexCol, microButton } from "@/styling/classNames";
 import { useEffect, useState } from "react";
-import { DataType, apiServiceFactory } from "shared"
+import { DataType, apiServiceFactory, Sender } from "shared"
 import { NewItemMaker } from "./NewItemMaker";
-
 
 
 type ContentManagerProps = {

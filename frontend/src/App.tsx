@@ -1,39 +1,36 @@
 import "./App.css";
 import prodServiceFactory from "./services/prodService";
 import { DevApiDashboard } from "./components/ApiTesterDashboard";
-import { ListMgmt } from "./components/ListMgmt";
 import { useState } from "react";
-import { flexCol, flexRowMP2, flexRowBordered } from "./styling/classNames";
+import { flexCol, flexRowMP2, flexRowBordered, selectedHeaderButton, unselectedHeaderButton } from "./styling/classNames";
 import { ContentManager } from "./components/SenderMgmt";
+import { DataType } from "shared";
 // import mockService from "./services/mockService";
 
 
 
 function App() {
-  const [selectedComponent, setSelectedComponent] = useState("ListMgmt");
+  const [selectedComponent, setSelectedComponent] = useState<DataType | "Internal">("sender");
 
   return (
     <div className="min-h-screen max-v-screen">
       <div className={flexCol}>
-
         <div className={flexRowMP2}>
-          <select value={selectedComponent} onChange={(e) => setSelectedComponent(e.target.value)}>
-            <option value="SenderMgmt">Sender Management</option>
-            <option value="RecipientMgmt">Recipient Management</option>
-            <option value="ListMgmt">List Management</option>
-            <option value="BlastMgmt">Blast Management</option>
-            <option value="MessageMgmt">Message Management</option>
-            <option value="ApiDashboard">API Dashboard</option>
-          </select>
+          <button onClick={() => setSelectedComponent("sender")} className={selectedComponent === "sender" ? selectedHeaderButton : unselectedHeaderButton}>Senders</button>
+          <button onClick={() => setSelectedComponent("recipient")} className={selectedComponent === "recipient" ? selectedHeaderButton : unselectedHeaderButton}>Recipients</button>
+          <button onClick={() => setSelectedComponent("list")} className={selectedComponent === "list" ? selectedHeaderButton : unselectedHeaderButton}>Lists</button>
+          <button onClick={() => setSelectedComponent("blast")} className={selectedComponent === "blast" ? selectedHeaderButton : unselectedHeaderButton}>Blasts</button>
+          <button onClick={() => setSelectedComponent("message")} className={selectedComponent === "message" ? selectedHeaderButton : unselectedHeaderButton}>Messages</button>
+          <button onClick={() => setSelectedComponent("Internal")} className={selectedComponent === "Internal" ? selectedHeaderButton : unselectedHeaderButton}>API Dashboard</button>
         </div>
 
         <div className={flexRowBordered}>
-          {selectedComponent === "SenderMgmt" && <ContentManager dataType="sender" />}
-          {selectedComponent === "RecipientMgmt" && <ContentManager dataType="recipient" />}
-          {selectedComponent === "ListMgmt" && <ListMgmt senderId={1} />}
-          {selectedComponent === "BlastMgmt" && <ContentManager dataType="blast" />}
-          {selectedComponent === "MessageMgmt" && <ContentManager dataType="message" />}
-          {selectedComponent === "ApiDashboard" && <DevApiDashboard serviceFactory={prodServiceFactory} />}
+          {selectedComponent === "sender" && <ContentManager dataType="sender" />}
+          {selectedComponent === "recipient" && <ContentManager dataType="recipient" />}
+          {selectedComponent === "list" && <ContentManager dataType="list" />}
+          {selectedComponent === "blast" && <ContentManager dataType="blast" />}
+          {selectedComponent === "message" && <ContentManager dataType="message" />}
+          {selectedComponent === "Internal" && <DevApiDashboard serviceFactory={prodServiceFactory} />}
         </div>
 
       </div>
