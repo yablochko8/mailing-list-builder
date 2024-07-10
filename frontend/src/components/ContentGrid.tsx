@@ -5,8 +5,6 @@ import { EditButton } from "./EditMaker";
 // import { useState } from "react";
 
 
-
-
 type ContentGridProps = {
     dataType: DataType;
     items: any[];

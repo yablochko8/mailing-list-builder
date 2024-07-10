@@ -1,18 +1,15 @@
 import CONFIG from "./config";
-
-/**
- * COPY PASTA FROM JAKE CODE
- */
+import { useAuth } from "@clerk/clerk-react";
 
 type CustomOptions = {};
 
 type Options = RequestInit & CustomOptions;
 
-// @TODO replace me with real auth
-const getToken = () => "WHAT UP";
-
 const makeRequest = async (path: string, options?: Options) => {
-  const token = getToken();
+  const { getToken } = useAuth();
+  const token = await getToken();
+
+  console.log("token is", token);
 
   const response = await fetch(CONFIG.BASE_URL + path, {
     ...options,

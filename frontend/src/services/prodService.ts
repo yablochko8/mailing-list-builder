@@ -1,4 +1,4 @@
-import { ApiService, ApiServiceFactory, DBTable } from "shared";
+import { ApiService, ApiServiceFactory, DataType } from "shared";
 import { API_PATHS } from "./util/config";
 import makeRequest from "./util/makeRequest";
 
@@ -24,7 +24,9 @@ import makeRequest from "./util/makeRequest";
  * The paths for these functions can be found in API_PATHS
  */
 
-const prodServiceFactory: ApiServiceFactory = (table: DBTable): ApiService => ({
+const prodServiceFactory: ApiServiceFactory = (
+  table: DataType
+): ApiService => ({
   getAll: () => {
     return makeRequest(API_PATHS[table].getAll);
   },

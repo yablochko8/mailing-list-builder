@@ -1,30 +1,34 @@
 import { inputBox, sectionTitle, secondaryButton, primaryButton } from "@/styling/classNames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DataType, apiServiceFactory, DataShapes } from "shared"
 import { NewItemMaker } from "./NewItemMaker";
 import { ContentGrid } from "./ContentGrid";
 
 
 type ContentManagerProps = {
-    dataType: DataType
+    dataType: DataType;
+    userToken?: string
 }
 /**
  * Let's make this work for Sender.
  */
 export const ContentManager = (props: ContentManagerProps) => {
-    const [displayItems, setItems] = useState<DataShapes[typeof props.dataType][]>([]);
+
+    const { dataType, userToken } = props
+
+
+
+
+    const [displayItems, setItems] = useState<DataShapes[typeof dataType][]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [createToggle, setCreateToggle] = useState(false);
 
-    const [key, setKey] = useState(0); // Add this line
+    const [key, setKey] = useState(0);
     console.log("Key is", key)
 
-    const { getAll, search } = apiServiceFactory(props.dataType)
-    const title = props.dataType.charAt(0).toUpperCase() + props.dataType.slice(1) + "s"
+    const { getAll, search } = apiServiceFactory(dataType, userToken)
+    const title = dataType.charAt(0).toUpperCase() + dataType.slice(1) + "s"
 
-    useEffect(() => {
-        fetchItems();
-    }, []);
 
 
     /**
@@ -60,7 +64,7 @@ export const ContentManager = (props: ContentManagerProps) => {
         <div>
             <div className={sectionTitle}>{title}</div>
 
-            {createToggle && (<NewItemMaker key={key} dataType={props.dataType} onCancel={() => setCreateToggle(false)} onCreated={handleCreated} />
+            {createToggle && (<NewItemMaker key={key} dataType={dataType} onCancel={() => setCreateToggle(false)} onCreated={handleCreated} />
             )}
 
             {!createToggle && (
@@ -76,7 +80,7 @@ export const ContentManager = (props: ContentManagerProps) => {
                         />
                         <button onClick={fetchItems} className={secondaryButton}>Search</button>
                     </div>
-                    <ContentGrid dataType={props.dataType} items={displayItems} onChange={() => fetchItems()} gridKey={key} />
+                    <ContentGrid dataType={dataType} items={displayItems} onChange={() => fetchItems()} gridKey={key} />
 
                     <button onClick={() => setCreateToggle(true)} className={primaryButton}>Create New</button>
 
