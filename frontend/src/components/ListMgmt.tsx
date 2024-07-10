@@ -1,3 +1,4 @@
+import { inputBox, sectionSubTitle, sectionTitle, secondaryButton, primaryButton, standardButton, flexCol, flexRowSimple, microButton } from "@/styling/classNames";
 import { useEffect, useState } from "react";
 import { apiServiceFactory } from "shared"
 
@@ -9,7 +10,7 @@ import { apiServiceFactory } from "shared"
 export const ListMgmt = ({ senderId }: { senderId: number }) => {
     const [lists, setLists] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [showCreatePopup, setShowCreatePopup] = useState(false);
+    const [createToggle, setCreateToggle] = useState(false);
     const [newListName, setNewListName] = useState("");
 
     const { getAll, search, deleteItem, newItem, updateItem } = apiServiceFactory("list")
@@ -49,7 +50,7 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
         try {
             await newItem({ name: newListName, senderId });
             setNewListName("");
-            setShowCreatePopup(false);
+            setCreateToggle(false);
             fetchLists(); // Refresh the list after creation
         } catch (error) {
             console.error("Error creating new list:", error);
@@ -71,28 +72,36 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
 
     return (
         <div>
-            <div className="font-bold text-red-600">Mailing Lists</div>
+            <div className={sectionTitle}>Mailing Lists</div>
 
-            {showCreatePopup && (
+            {createToggle && (
 
-                <div className="popup">
-                    <button onClick={() => setShowCreatePopup(false)}>Back to Search</button>
+                <div className={flexCol}>
 
-                    <h3>Create New List</h3>
-                    <input
-                        type="text"
-                        value={newListName}
-                        onChange={(e) => setNewListName(e.target.value)}
-                        placeholder="Enter list name"
-                    />
-                    <button onClick={handleCreateList}>Create</button>
-                    <button onClick={() => setShowCreatePopup(false)}>Cancel</button>
+                    <div className={flexRowSimple}>
+                        <div className={sectionSubTitle}>
+                            Enter details
+                        </div>
+                    </div>
+                    <div className={flexRowSimple}>
+
+                        <input
+                            type="text"
+                            value={newListName}
+                            onChange={(e) => setNewListName(e.target.value)}
+                            placeholder="List name"
+                            className={inputBox}
+                        />
+                    </div>
+                    <div className={flexRowSimple}>
+                        <button onClick={handleCreateList} className={primaryButton}>Create</button>
+                        <button onClick={() => setCreateToggle(false)} className={standardButton}>Cancel</button>
+                    </div>
                 </div>
             )}
 
-            {!showCreatePopup && (
+            {!createToggle && (
                 <div>
-                    <button onClick={() => setShowCreatePopup(true)}>Create New</button>
 
                     <div>
                         <input
@@ -100,19 +109,21 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search lists..."
+                            className={inputBox}
                         />
-                        <button onClick={handleSearch}>Search</button>
+                        <button onClick={handleSearch} className={secondaryButton}>Search</button>
                     </div>
                     <ul>
                         {lists.map((list) => (
                             <div key={list.id} className="list-item">
                                 <span className="list-name">{list.name}</span>
                                 <span className="recipient-count"> - Recipients: {list.recipientCount}</span>
-                                <button onClick={() => handleDelete(list.id)}>Delete</button>
-                                <button onClick={() => handleChangeName(list.id)}>Rename</button>
+                                <button onClick={() => handleChangeName(list.id)} className={microButton}>Edit</button>
+                                <button onClick={() => handleDelete(list.id)} className={microButton}>Delete</button>
                             </div>
                         ))}
                     </ul>
+                    <button onClick={() => setCreateToggle(true)} className={primaryButton}>Create New</button>
 
                 </div>
             )}
