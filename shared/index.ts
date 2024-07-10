@@ -1,6 +1,13 @@
 // import mockServiceFactory from "@/services/mockService";
 import prodServiceFactory from "../frontend/src/services/prodService";
 import { API_PATHS } from "../frontend/src/services/util/config";
+import {
+  Sender,
+  Recipient,
+  List,
+  Blast,
+  Message,
+} from "../server/node_modules/@prisma/client";
 
 /**
  * SHARED CONFIG SETTINGS
@@ -14,6 +21,8 @@ export const apiServiceFactory: ApiServiceFactory = prodServiceFactory;
  * SHARED TYPES
  */
 
+export type { Sender, Recipient, List, Blast, Message };
+
 export const dataTypes = [
   "sender",
   "recipient",
@@ -21,6 +30,14 @@ export const dataTypes = [
   "blast",
   "message",
 ] as const; // this tells TS to treat list as readonly tuple with specific string literal types
+
+export type DataShapes = {
+  sender: Sender;
+  recipient: Recipient;
+  list: List;
+  blast: Blast;
+  message: Message;
+};
 
 export type DataType = (typeof dataTypes)[number];
 
@@ -44,3 +61,16 @@ export const DefaultCreationValues = {
   blast: { name: "", listId: 1 },
   message: { content: "", blastId: 1 },
 };
+
+/**
+ * Fields we don't want to show to customers, especially in editing screens.
+ */
+export const fieldsToExclude = [
+  "id",
+  "createdAt",
+  "updatedAt",
+  "deletedAt",
+  "version",
+  "clerkId",
+  "senderId",
+];
