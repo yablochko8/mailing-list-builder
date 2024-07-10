@@ -1,5 +1,5 @@
 import { inputBox, sectionTitle, secondaryButton, primaryButton } from "@/styling/classNames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataType, apiServiceFactory, DataShapes } from "shared"
 import { NewItemMaker } from "./NewItemMaker";
 import { ContentGrid } from "./ContentGrid";
@@ -15,7 +15,6 @@ type ContentManagerProps = {
 export const ContentManager = (props: ContentManagerProps) => {
 
     const { dataType, userToken } = props
-
 
 
 
@@ -51,6 +50,11 @@ export const ContentManager = (props: ContentManagerProps) => {
         }
     };
 
+
+
+    useEffect(() => {
+        fetchItems();
+    }, []);
 
 
     const handleCreated = () => {

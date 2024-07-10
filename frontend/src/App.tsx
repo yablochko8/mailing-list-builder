@@ -24,6 +24,7 @@ function App() {
     const fetchData = async () => {
       const freshToken = await getToken();
       setUserToken(freshToken ?? "");
+      console.log(freshToken)
     };
 
     fetchData();
@@ -31,10 +32,10 @@ function App() {
 
   const [selectedComponent, setSelectedComponent] = useState<DataType | "Internal">("sender");
 
-  const registerSender = selectedServiceFactory("sender").newItem
 
   useEffect(() => {
     if (isSignedIn && user) {
+      const registerSender = selectedServiceFactory("sender").newItem
       const saveUserDetails = async () => {
         try {
           const response = await registerSender({
