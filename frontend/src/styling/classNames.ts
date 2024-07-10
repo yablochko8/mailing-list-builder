@@ -8,6 +8,8 @@ export const sectionTitle = `font-bold text-blue-800 text-2xl mb-3`;
 
 export const sectionSubTitle = `font-semibold text-gray-400 text-xl mb-2`;
 
+export const sectionDetail = `text-gray-600 text-sm mb-1`;
+
 export const flexRowBordered = flexRowMP2 + ` border-solid border rounded-lg`;
 
 export const buttonShared = `text-white font-bold py-2 px-4 rounded-lg m-1 `;
