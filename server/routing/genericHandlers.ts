@@ -1,35 +1,26 @@
 import { dbClient } from "../utils/dbClient";
 import { TransferTypes } from "./transferTypes";
 
+import {
+  requireAuth,
+  LooseAuthProp,
+  // WithAuthProp, - suggested by Clerk docs but seem to be unnecessary
+} from "@clerk/clerk-sdk-node";
+
+// import { Application, Request, Response } from "express"; - suggested by Clerk docs but seem to be unnecessary
+import { accessSenderId } from "./accessSenderId";
+
+import "dotenv/config"; // To read CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY
+
+declare global {
+  namespace Express {
+    interface Request extends LooseAuthProp {}
+  }
+}
+
 // THESE SHOULD NOT BE HERE THEY SHOULD IVE IN SHARED FOLDER
 const dataTypes = ["sender", "recipient", "list", "blast", "message"] as const;
 type DataType = (typeof dataTypes)[number];
-
-/**
- * AUTH VERSION
- * Retrieves all records from the specified table with an optional limit.
- */
-export const getAllV2 = (
-  table: DataType,
-  filterResults: boolean = true,
-  limit: number = 10
-) =>
-  requireAuth(async (req, res) => {
-    console.log("GET /all route called:", table);
-
-    const senderId = await accessSenderId(req.auth.userId);
-
-    const whereClause = {
-      deletedAt: null,
-      ...(filterResults && { senderId }),
-    };
-
-    const answerList = await (dbClient[table] as any).findMany({
-      where: whereClause,
-      take: limit,
-    });
-    res.json({ items: answerList });
-  });
 
 /**
  * Retrieves all records from the specified table with an optional limit.
@@ -50,92 +41,31 @@ export const getAll =
     res.json({ items: answerList });
   };
 
-import "dotenv/config"; // To read CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY
-
-import {
-  requireAuth,
-  LooseAuthProp,
-  WithAuthProp,
-} from "@clerk/clerk-sdk-node";
-
-import { Application, Request, Response } from "express";
-import { accessSenderId } from "./accessSenderId";
-import { Blast, List, Message, Recipient, Sender } from "@prisma/client";
-
-declare global {
-  namespace Express {
-    interface Request extends LooseAuthProp {}
-  }
-}
-
-// /**
-//  * AUTH VERSION: Returned function will searches a named table and return { items : something[] }
-//  * Only searches the "name" column of the table for now.
-//  */
-// export const getSearchWithAuth = <Table extends keyof TransferTypes>(
-//   table: Table,
-//   limit: number = 10
-// ) =>
-//   requireAuth(
-//     async (
-//       req: TransferTypes[Table]["req"],
-//       res: TransferTypes[Table]["res"]
-//     ) => {
-//       console.log("GET /search WITH AUTH route called:", table);
-//       const clerkId = req.auth.userId; // Accessing Clerk ID
-//       const supplierId = await accessSenderId(clerkId);
-//       const { query } = req.params;
-//       console.log(`Searching the name field for query: ${query}`);
-//       const answerList = await (dbClient[table] as any).findMany({
-//         where: {
-//           name: {
-//             contains: query,
-//             mode: "insensitive",
-//           },
-//           deletedAt: null,
-//           supplierId: supplierId,
-//         },
-//         take: limit,
-//       });
-//       res.json({ items: answerList });
-//     }
-//   );
-
 /**
- * AUTH VERSION WHICH ALSO FILTERS BY SENDER
- * Returned function searches a named table and return { items : something[] }
- * Only searches the "name" column of the table for now.
+ * AUTH VERSION WITH FILTER BY SENDER
+ * Retrieves all records from the specified table with an optional limit.
  */
-export const getSearchWithSenderFilter = <Table extends keyof TransferTypes>(
-  table: Table,
+export const getAllAuthed = (
+  table: DataType,
+  filterResults: boolean = true,
   limit: number = 10
 ) =>
-  requireAuth(
-    async (
-      req: TransferTypes[Table]["req"],
-      res: TransferTypes[Table]["res"]
-    ) => {
-      console.log("GET /search WITH AUTH route called:", table);
-      const clerkId = req.auth.userId; // Accessing Clerk ID
-      const senderId = await accessSenderId(clerkId);
+  requireAuth(async (req, res) => {
+    console.log("GET /all route called:", table);
 
-      console.log("Request headers authorization:", req.headers.authorization);
-      const { query } = req.params;
-      console.log(`Searching the name field for query: ${query}`);
-      const answerList = await (dbClient[table] as any).findMany({
-        where: {
-          name: {
-            contains: query,
-            mode: "insensitive",
-          },
-          deletedAt: null,
-          senderId: senderId, // Add this line to filter by supplierId
-        },
-        take: limit,
-      });
-      res.json({ items: answerList });
-    }
-  );
+    const senderId = await accessSenderId(req.auth.userId);
+
+    const whereClause = {
+      deletedAt: null,
+      ...(filterResults && { senderId }),
+    };
+
+    const answerList = await (dbClient[table] as any).findMany({
+      where: whereClause,
+      take: limit,
+    });
+    res.json({ items: answerList });
+  });
 
 /**
  * Returned function will searches a named table and return { items : something[] }
@@ -163,6 +93,41 @@ export const getSearch =
     });
     res.json({ items: answerList });
   };
+
+/**
+ * AUTH VERSION WITH FILTER BY SENDER
+ * Returned function searches a named table and return { items : something[] }
+ * Only searches the "name" column of the table for now.
+ */
+export const getSearchAuthed = (
+  table: DataType,
+  filterResults: boolean = true,
+  limit: number = 10
+) =>
+  requireAuth(async (req, res) => {
+    console.log("GET /search WITH AUTH route called:", table);
+
+    const query = req.params.query;
+    const clerkId = req.auth.userId;
+    const senderId = await accessSenderId(clerkId);
+
+    console.log(
+      `Searching the name field for query: ${query}, requested by Sender ${senderId}`
+    );
+
+    const answerList = await (dbClient[table] as any).findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+        deletedAt: null,
+        senderId: senderId,
+      },
+      take: limit,
+    });
+    res.json({ items: answerList });
+  });
 
 /**
  * Retrieves a single record from the specified table by its ID.

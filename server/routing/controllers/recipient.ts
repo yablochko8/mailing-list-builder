@@ -3,10 +3,10 @@ import { dbClient } from "../../utils/dbClient";
 import {
   deleteOne,
   getAll,
-  getAllV2,
+  getAllAuthed,
   getOne,
   getSearch,
-  getSearchWithSenderFilter,
+  getSearchAuthed,
 } from "../genericHandlers";
 
 const focus = "recipient";
@@ -15,9 +15,9 @@ const focus = "recipient";
  * <STANDARD ROUTES>
  */
 const router = express.Router();
-router.get("/all", getAllV2(focus, true, 20));
+router.get("/all", getAllAuthed(focus, true, 20));
 router.get("/:id", getOne(focus));
-router.get("/search/:query", getSearchWithSenderFilter(focus));
+router.get("/search/:query", getSearchAuthed(focus));
 router.delete("/:id", deleteOne(focus));
 /**
  * </STANDARD ROUTES>
