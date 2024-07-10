@@ -1,4 +1,5 @@
-import { flexCol, microButton, sectionSubTitle, sectionDetail } from "@/styling/classNames";
+import { makePascal } from "@/services/util/makePascal";
+import { microButton, sectionSubTitle, sectionDetail } from "@/styling/classNames";
 import { DataType, apiServiceFactory } from "shared";
 
 type ContentGridProps = {
@@ -46,34 +47,30 @@ export const ContentGrid = (props: ContentGridProps) => {
 
     return (
         <>
-            <div key={gridKey}>
-                {items.map((item) => (
-                    <div key={item.id} className="flex flex-row justify-end">
-
-
-
-                        {Object.entries(item).filter(([key]) => !colsToExclude.includes(key)).map(([key, value]) => (
-                            <div key={key} className={flexCol}>
-                                <span className={sectionSubTitle}>{key}:</span>
-                                <span className={sectionDetail}>{String(value)}</span>
-                            </div>
-                        ))}
-
-
-
-                        <div className={flexCol}>
-                            <button onClick={() => handleChangeName(item.id)} className={microButton}>Edit</button>
-
-                        </div>
-                        <div className={flexCol}>
-                            <button onClick={() => handleDelete(item.id)} className={microButton}>Delete</button>
-
-                        </div>
-
+            <div key={gridKey} className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Object.keys(items[0] || {}).filter(key => !colsToExclude.includes(key)).length + 2}, minmax(0, 1fr))` }}>
+                {Object.keys(items[0] || {}).filter(key => !colsToExclude.includes(key)).map(key => (
+                    <div key={key} className={sectionSubTitle}>
+                        {makePascal(key)}
                     </div>
                 ))}
+                <div className={sectionSubTitle}></div>
+                <div className={sectionSubTitle}></div>
 
-
+                {items.map((item) => (
+                    <>
+                        {Object.entries(item).filter(([key]) => !colsToExclude.includes(key)).map(([key, value]) => (
+                            <div key={`${item.id}-${key}`} className={sectionDetail}>
+                                {String(value)}
+                            </div>
+                        ))}
+                        <div>
+                            <button onClick={() => handleChangeName(item.id)} className={microButton}>Edit</button>
+                        </div>
+                        <div>
+                            <button onClick={() => handleDelete(item.id)} className={microButton}>Delete</button>
+                        </div>
+                    </>
+                ))}
             </div>
 
 
