@@ -1,6 +1,36 @@
 import { dbClient } from "../utils/dbClient";
 import { TransferTypes } from "./transferTypes";
 
+// THESE SHOULD NOT BE HERE THEY SHOULD IVE IN SHARED FOLDER
+const dataTypes = ["sender", "recipient", "list", "blast", "message"] as const;
+type DataType = (typeof dataTypes)[number];
+
+/**
+ * AUTH VERSION
+ * Retrieves all records from the specified table with an optional limit.
+ */
+export const getAllV2 = (
+  table: DataType,
+  filterResults: boolean = true,
+  limit: number = 10
+) =>
+  requireAuth(async (req, res) => {
+    console.log("GET /all route called:", table);
+
+    const senderId = await accessSenderId(req.auth.userId);
+
+    const whereClause = {
+      deletedAt: null,
+      ...(filterResults && { senderId }),
+    };
+
+    const answerList = await (dbClient[table] as any).findMany({
+      where: whereClause,
+      take: limit,
+    });
+    res.json({ items: answerList });
+  });
+
 /**
  * Retrieves all records from the specified table with an optional limit.
  */
@@ -30,6 +60,7 @@ import {
 
 import { Application, Request, Response } from "express";
 import { accessSenderId } from "./accessSenderId";
+import { Blast, List, Message, Recipient, Sender } from "@prisma/client";
 
 declare global {
   namespace Express {
@@ -37,11 +68,45 @@ declare global {
   }
 }
 
+// /**
+//  * AUTH VERSION: Returned function will searches a named table and return { items : something[] }
+//  * Only searches the "name" column of the table for now.
+//  */
+// export const getSearchWithAuth = <Table extends keyof TransferTypes>(
+//   table: Table,
+//   limit: number = 10
+// ) =>
+//   requireAuth(
+//     async (
+//       req: TransferTypes[Table]["req"],
+//       res: TransferTypes[Table]["res"]
+//     ) => {
+//       console.log("GET /search WITH AUTH route called:", table);
+//       const clerkId = req.auth.userId; // Accessing Clerk ID
+//       const supplierId = await accessSenderId(clerkId);
+//       const { query } = req.params;
+//       console.log(`Searching the name field for query: ${query}`);
+//       const answerList = await (dbClient[table] as any).findMany({
+//         where: {
+//           name: {
+//             contains: query,
+//             mode: "insensitive",
+//           },
+//           deletedAt: null,
+//           supplierId: supplierId,
+//         },
+//         take: limit,
+//       });
+//       res.json({ items: answerList });
+//     }
+//   );
+
 /**
- * Returned function will searches a named table and return { items : something[] }
+ * AUTH VERSION WHICH ALSO FILTERS BY SENDER
+ * Returned function searches a named table and return { items : something[] }
  * Only searches the "name" column of the table for now.
  */
-export const getSearchWithAuth = <Table extends keyof TransferTypes>(
+export const getSearchWithSenderFilter = <Table extends keyof TransferTypes>(
   table: Table,
   limit: number = 10
 ) =>
@@ -52,7 +117,7 @@ export const getSearchWithAuth = <Table extends keyof TransferTypes>(
     ) => {
       console.log("GET /search WITH AUTH route called:", table);
       const clerkId = req.auth.userId; // Accessing Clerk ID
-      const supplierId = await accessSenderId(clerkId);
+      const senderId = await accessSenderId(clerkId);
 
       console.log("Request headers authorization:", req.headers.authorization);
       const { query } = req.params;
@@ -64,6 +129,7 @@ export const getSearchWithAuth = <Table extends keyof TransferTypes>(
             mode: "insensitive",
           },
           deletedAt: null,
+          senderId: senderId, // Add this line to filter by supplierId
         },
         take: limit,
       });
