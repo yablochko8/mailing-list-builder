@@ -1,24 +1,21 @@
 import CONFIG from "./config";
 
-/**
- * COPY PASTA FROM JAKE CODE
- */
-
 type CustomOptions = {};
 
 type Options = RequestInit & CustomOptions;
-
-// @TODO replace me with real auth
-const getToken = () => "WHAT UP";
-
+/**
+ * If the options object only contains a token, it will look like this:
+ * {
+ *   headers: {
+ *     Authorization: `Bearer ${token}`
+ *   }
+ * }
+ */
 const makeRequest = async (path: string, options?: Options) => {
-  const token = getToken();
-
   const response = await fetch(CONFIG.BASE_URL + path, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
       ...options?.headers,
     },
     body: options?.body ? JSON.stringify(options.body) : undefined,

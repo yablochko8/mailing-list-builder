@@ -37,14 +37,19 @@ export const NewItemMaker = (props: NewItemProps) => {
 
 
             {Object.keys(newItemDetails).map((inputField) => (
-                <div className={flexCol}>
+                <div key={inputField} className={flexCol}>
                     <div className={flexRowSimple}>{makePascal(inputField)}</div>
                     <div className={flexRowSimple}>
                         <input
                             key={inputField}
                             type={typeof (DefaultCreationValues[dataType] as any)[inputField] === "number" ? "number" : "text"}
                             value={(newItemDetails as any)[inputField]}
-                            onChange={(e) => setNewItemDetails({ ...newItemDetails, [inputField]: e.target.value })}
+                            onChange={(e) => setNewItemDetails({
+                                ...newItemDetails,
+                                [inputField]: typeof (DefaultCreationValues[dataType] as any)[inputField] === "number"
+                                    ? Number(e.target.value)
+                                    : e.target.value
+                            })}
                             placeholder={makePascal(inputField)}
                             className={inputBox} />
                     </div>

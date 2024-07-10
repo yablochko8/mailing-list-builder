@@ -5,8 +5,6 @@ import { EditButton } from "./EditMaker";
 // import { useState } from "react";
 
 
-
-
 type ContentGridProps = {
     dataType: DataType;
     items: any[];
@@ -32,7 +30,7 @@ export const ContentGrid = (props: ContentGridProps) => {
         try {
             await deleteItem(id);
         } catch (error) {
-            console.error("Error deleting list:", error);
+            console.error(`Error deleting ${dataType}`, error);
         }
         onChange();
     };
