@@ -30,7 +30,7 @@ export const ContentGrid = (props: ContentGridProps) => {
         try {
             await deleteItem(id);
         } catch (error) {
-            console.error(`Error deleting ${dataType}: ${error}`);
+            console.error(`Error deleting ${dataType}`, error);
         }
         onChange();
     };
