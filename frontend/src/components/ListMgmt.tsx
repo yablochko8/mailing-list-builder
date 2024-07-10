@@ -19,18 +19,18 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
         fetchLists();
     }, []);
 
+
+    /**
+     * Handles getAll AND search. This is invoked on first render.
+     */
     const fetchLists = async () => {
         try {
-            const response = await getAll();
-            setLists(response.items);
-        } catch (error) {
-            console.error("Error fetching lists:", error);
-        }
-    };
-
-    const handleSearch = async () => {
-        try {
-            const response = await search(searchQuery);
+            let response;
+            if (searchQuery.trim() === "") {
+                response = await getAll();
+            } else {
+                response = await search(searchQuery);
+            }
             setLists(response.items);
         } catch (error) {
             console.error("Error searching lists:", error);
@@ -111,15 +111,21 @@ export const ListMgmt = ({ senderId }: { senderId: number }) => {
                             placeholder="Search lists..."
                             className={inputBox}
                         />
-                        <button onClick={handleSearch} className={secondaryButton}>Search</button>
+                        <button onClick={fetchLists} className={secondaryButton}>Search</button>
                     </div>
                     <ul>
                         {lists.map((list) => (
-                            <div key={list.id} className="list-item">
-                                <span className="list-name">{list.name}</span>
-                                <span className="recipient-count"> - Recipients: {list.recipientCount}</span>
-                                <button onClick={() => handleChangeName(list.id)} className={microButton}>Edit</button>
-                                <button onClick={() => handleDelete(list.id)} className={microButton}>Delete</button>
+                            <div key={list.id} className="flex flex-row justify-end">
+                                <div className={flexCol}>{list.name} - {list.recipientCount}</div>
+                                <div className={flexCol}>
+                                    <button onClick={() => handleChangeName(list.id)} className={microButton}>Edit</button>
+
+                                </div>
+                                <div className={flexCol}>
+                                    <button onClick={() => handleDelete(list.id)} className={microButton}>Delete</button>
+
+                                </div>
+
                             </div>
                         ))}
                     </ul>
