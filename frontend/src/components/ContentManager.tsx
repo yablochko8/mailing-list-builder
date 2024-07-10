@@ -16,18 +16,14 @@ export const ContentManager = (props: ContentManagerProps) => {
 
     const { dataType, userToken } = props
 
-
-
     const [displayItems, setItems] = useState<DataShapes[typeof dataType][]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [createToggle, setCreateToggle] = useState(false);
 
     const [key, setKey] = useState(0);
-    console.log("Key is", key)
 
     const { getAll, search } = apiServiceFactory(dataType, userToken)
     const title = dataType.charAt(0).toUpperCase() + dataType.slice(1) + "s"
-
 
 
     /**
@@ -41,26 +37,21 @@ export const ContentManager = (props: ContentManagerProps) => {
             } else {
                 response = await search(searchQuery);
             }
-            console.log("setItems now....", displayItems)
             setItems(response.items);
-            console.log("setItems done....", response.items); // Log the new items, not the current state
             setKey(prevKey => prevKey + 1);
         } catch (error) {
             console.error("Error searching lists:", error);
         }
     };
 
-
-
     useEffect(() => {
         fetchItems();
     }, []);
 
-
     const handleCreated = () => {
         setCreateToggle(false);
         fetchItems();
-        setKey(prevKey => prevKey + 1); // Add this line
+        setKey(prevKey => prevKey + 1);
     };
 
 
