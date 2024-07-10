@@ -3,7 +3,7 @@ import prodServiceFactory from "./services/prodService";
 import { DevApiDashboard } from "./components/ApiTesterDashboard";
 import { useState } from "react";
 import { flexCol, flexRowMP2, flexRowBordered, selectedHeaderButton, unselectedHeaderButton } from "./styling/classNames";
-import { ContentManager } from "./components/SenderMgmt";
+import { ContentManager } from "./components/ContentManager";
 import { DataType } from "shared";
 // import mockService from "./services/mockService";
 
