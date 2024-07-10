@@ -31,6 +31,7 @@ export const getSearch =
     res: TransferTypes[Table]["res"]
   ) => {
     console.log("GET /search route called:", table);
+    console.log("Request headers authorization:", req.headers.authorization);
     const { query } = req.params;
     console.log(`Searching the name field for query: ${query}`);
     const answerList = await (dbClient[table] as any).findMany({
