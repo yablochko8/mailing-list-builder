@@ -1,1 +1,2 @@
-# File created using new-app script
+# File created using:
+```npx typespark```
