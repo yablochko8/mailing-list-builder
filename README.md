@@ -1,2 +1,2 @@
-# File created using:
+# Project started using:
 ```npx typespark```
